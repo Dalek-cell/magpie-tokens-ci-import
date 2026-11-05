@@ -1,0 +1,35 @@
+{
+  "name": "magpie-tokens-ci-import",
+  "version": "0.1.0",
+  "description": "Submit Magpie usage snapshots to tokens.ci",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./server": "./index.mjs"
+  },
+  "magpie": {
+    "name": "tokens.ci Import",
+    "summary": {
+      "en": "Daily submit Magpie usage to tokens.ci",
+      "zh": "每日把 Magpie 用量提交到 tokens.ci"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20",
+    "bun": ">=1.1.0"
+  },
+  "license": "MIT",
+  "keywords": [
+    "magpie",
+    "tokens.ci",
+    "usage",
+    "tokens"
+  ]
+}
