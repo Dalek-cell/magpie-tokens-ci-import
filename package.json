@@ -1,6 +1,9 @@
 {
   "name": "magpie-tokens-ci-import",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "scripts": {
+    "test": "node --test"
+  },
   "description": "Submit Magpie usage snapshots to tokens.ci",
   "type": "module",
   "main": "./index.mjs",

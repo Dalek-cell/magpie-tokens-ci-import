@@ -30,7 +30,7 @@ export default {
 
         stopScheduler ??= startDailyScheduler(async (now) => {
           const result = await run(settings, { scheduled: true, now });
-          if (["not-due", "unchanged", "empty"].includes(result.status)) return;
+          if (["not-due", "unchanged", "empty", "disabled"].includes(result.status)) return;
           const level = result.status === "auth-blocked" ? "error" : "info";
           await log(JSON.stringify(result), level);
         }, (message) => log(message, "error"));
