@@ -66,6 +66,23 @@ test("timestamps are validated and grouped by UTC date", () => {
   }
 });
 
+test("only explicit Magpie sources enter the Claude compatibility bucket", async (t) => {
+  const config = await fixture(t);
+  const sources = ["magpie", " MAGPIE ", "claude", "codex", "opencode", "Charm-Crush", "curl", "RikkaHub-Android", "", null];
+  const records = sources.map(agent => ({ ...record, agent }));
+  records.push({ ...record, via: "codex" });
+  await writeFile(config.usageFile, records.map(r => JSON.stringify(r)).join("\n"));
+  const payload = await aggregate(config, { now });
+  assert.equal(Object.hasOwn(payload, "timeMetrics"), false);
+  assert.equal(Object.hasOwn(payload, "mcpServers"), false);
+  assert.deepEqual(payload.summary.clients, ["claude"]);
+  assert.equal(payload.summary.totalTokens, 30);
+  assert.equal(payload.contributions[0].totals.messages, 2);
+  assert.equal(payload.contributions[0].clients[0].client, "claude");
+  await writeFile(config.usageFile, JSON.stringify({ ...record, agent: "opencode" }));
+  assert.equal((await aggregate(config, { now })).contributions.length, 0);
+});
+
 test("invalid records and current UTC day are excluded", async (t) => {
   const config = await fixture(t);
   await writeFile(config.usageFile, ["bad json", JSON.stringify(record), JSON.stringify({ ...record, in: -1 }), JSON.stringify({ ...record, t: "2026-11-06T12:00:00Z" })].join("\n"));

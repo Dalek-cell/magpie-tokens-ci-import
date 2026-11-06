@@ -4,6 +4,12 @@ Submit Magpie usage snapshots to [tokens.ci](https://tokens.ci).
 
 This plugin runs inside Magpie. It reads `usage.jsonl`, aggregates by UTC day, and posts to `POST /api/submit` on tokens.ci.
 
+## Compatibility mode (0.1.2)
+
+Only records whose source (`via`, otherwise `agent`) is explicitly `magpie` are included. They are submitted as `client: "claude"` for tokens.ci compatibility; **this is a compatibility classification, not a claim that Claude Code produced the usage**. Original model names and token counts are preserved, and the device remains named Magpie. All other sources (including actual Claude, Codex, OpenCode, Crush, unknown and missing sources) are excluded. Therefore these totals are only the Magpie subset, not all gateway usage.
+
+This temporary mapping is user-requested, not official Magpie support or approval from tokens.ci. Avoid also uploading the same underlying requests from another client exporter, which could double-count usage. Native `magpie` support should be discussed with tokens.ci maintainers before broader distribution. No discovery Topic or release tag is currently added for this integration.
+
 ## Install
 
 ### From GitHub
