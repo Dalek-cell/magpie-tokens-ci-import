@@ -83,6 +83,15 @@ test("only explicit Magpie sources enter the Claude compatibility bucket", async
   assert.equal((await aggregate(config, { now })).contributions.length, 0);
 });
 
+test("submission version fits the tokens.ci database column and matches package version", async (t) => {
+  const config = await fixture(t);
+  const payload = await aggregate(config, { now });
+  const pkg = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+  assert.equal(payload.meta.version, pkg.version);
+  assert.match(payload.meta.version, /^\d+\.\d+\.\d+$/);
+  assert.ok(payload.meta.version.length <= 20);
+});
+
 test("invalid records and current UTC day are excluded", async (t) => {
   const config = await fixture(t);
   await writeFile(config.usageFile, ["bad json", JSON.stringify(record), JSON.stringify({ ...record, in: -1 }), JSON.stringify({ ...record, t: "2026-11-06T12:00:00Z" })].join("\n"));
